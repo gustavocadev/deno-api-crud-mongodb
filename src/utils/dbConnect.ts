@@ -1,10 +1,9 @@
 import { MongoClient } from "../../deps.ts";
+import { config } from "https://deno.land/x/dotenv/mod.ts";
 
 const client = new MongoClient();
 
-await client.connect(
-  "mongodb+srv://aprender-node:BAVgRFBrfeC5Chfj@cluster0.hwjc6.mongodb.net/dataUsersDBTest?authMechanism=SCRAM-SHA-1",
-);
+await client.connect(config().MONGODB_URI);
 
 console.log("connectado 🚀:D🌍👦");
   

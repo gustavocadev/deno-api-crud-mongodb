@@ -5,4 +5,6 @@ export {
 
 export { Application, Router, Response, Request, Context, Status } from "https://deno.land/x/oak/mod.ts";
 
+export type { RouterContext, Route } from "https://deno.land/x/oak/mod.ts";
+
 

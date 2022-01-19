@@ -12,10 +12,8 @@ class Server {
 
     routes() {        
         this.app.use(router.routes())
-        this.app.use(router.allowedMethods());
-
+        this.app.use(router.allowedMethods())
     }
-    
 
     async listen() {
         console.log('listen at port 🚀:', this.port)
