@@ -1,4 +1,4 @@
-import { Application } from '../deps.ts'
+import { Application, config } from '../deps.ts'
 import router from './routes/posts.routes.ts'
 
 class Server {
@@ -6,7 +6,7 @@ class Server {
     private port: number
     constructor() {
         this.app = new Application()
-        this.port = 8000
+        this.port = Number(config().PORT)
         this.routes()
     }
 
