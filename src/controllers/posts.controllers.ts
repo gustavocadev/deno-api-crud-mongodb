@@ -1,7 +1,7 @@
-import { Bson, Context } from "../../deps.ts";
+import { Bson, RouterContext } from "../../deps.ts";
 import Post from "../models/Post.ts";
-// import type { RouterContext, Route } from '../../deps.ts'
-const getPosts = async ({ response }: Context) => {
+
+const getPosts = async ({ response }: RouterContext<'/api/posts'>) => {
   try {
     const posts = await Post.find({}, {
       noCursorTimeout: false,
@@ -14,7 +14,7 @@ const getPosts = async ({ response }: Context) => {
   }
 };
 
-const getPost = async ({ response, params }: Context  | any) => {
+const getPost = async ({ response, params }: RouterContext<'/api/posts/:id'>) => {
   const { id } = params;
 
   const user = await Post.findOne({ _id: new Bson.ObjectId(id) }, {
@@ -25,7 +25,7 @@ const getPost = async ({ response, params }: Context  | any) => {
   response.body = user;
 };
 
-const createPost = async ({ response, request }: Context) => {
+const createPost = async ({ response, request }: RouterContext<'/api/posts'>) => {
   const { value } = request.body();
   const data = await value;
 
@@ -48,11 +48,9 @@ const createPost = async ({ response, request }: Context) => {
   response.body = newUser;
 };
 
-const updatePost = async ({response, request , params}: Context | any) => {
+const updatePost = async ({response, request , params}: RouterContext<'/api/posts/:id'>) => {
   const { value } = request.body();
   const { title, description } = await value;
-
-  // const id = request.url.searchParams.get('id')
 
   if (!request.hasBody) {
     response.status = 404;
@@ -77,7 +75,7 @@ const updatePost = async ({response, request , params}: Context | any) => {
   }).toArray()
 };
 
-const deletePost = async ({response, params}: Context | any) => {
+const deletePost = async ({response, params}: RouterContext<'/api/posts/:id'>) => {
 
   const { id } = params
 
