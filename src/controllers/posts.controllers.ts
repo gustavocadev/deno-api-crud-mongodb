@@ -1,90 +1,86 @@
-import { Bson, RouterContext } from "../../deps.ts";
-import Post from "../models/Post.ts";
+import { Bson, RouterContext } from "../../deps.ts"
+import { postsCollection } from "../models/Post.ts"
 
-const getPosts = async ({ response }: RouterContext<'/api/posts'>) => {
+const getPosts = async ({ response }: RouterContext<"/api/posts">) => {
   try {
-    const posts = await Post.find({}, {
-      noCursorTimeout: false,
-    }).toArray();
-    console.log(posts);
-    response.body = posts;
-  } catch (err) {
-    console.error("Error on find");
-    throw err;
+    const posts = await postsCollection.find().toArray()
+    console.log(posts)
+    response.body = posts
+  } catch (error) {
+    console.error("Error on find")
+    throw error
   }
-};
+}
 
-const getPost = async ({ response, params }: RouterContext<'/api/posts/:id'>) => {
-  const { id } = params;
+const getPost = async (ctx: RouterContext<"/api/posts/:id">) => {
+  const { params, response } = ctx
+  const { id } = params
 
-  const user = await Post.findOne({ _id: new Bson.ObjectId(id) }, {
-    noCursorTimeout: false,
-  });
-  
-  response.status = 200;
-  response.body = user;
-};
+  const user = await postsCollection.findOne({ _id: new Bson.ObjectId(id) })
 
-const createPost = async ({ response, request }: RouterContext<'/api/posts'>) => {
-  const { value } = request.body();
-  const data = await value;
+  response.status = 200
+  response.body = user
+}
+
+const createPost = async (ctx: RouterContext<"/api/posts">) => {
+  const { request, response } = ctx
+  const { value } = request.body()
+  const data = await value
 
   if (!request.hasBody) {
-    response.status = 404;
+    response.status = 404
     response.body = {
       msg: "No hay contenido :(",
-    };
-    return;
+    }
+    return
   }
 
   const newUser = {
     ...data,
-  };
-
-
-  await Post.insertOne(newUser);
-  
-  response.status = 200;
-  response.body = newUser;
-};
-
-const updatePost = async ({response, request , params}: RouterContext<'/api/posts/:id'>) => {
-  const { value } = request.body();
-  const { title, description } = await value;
-
-  if (!request.hasBody) {
-    response.status = 404;
-    response.body = {
-      msg: "No hay contenido :(",
-    };
-    return;
   }
 
-  const { id } = params;
+  await postsCollection.insertOne(newUser)
 
-  await Post.updateOne({ _id: new Bson.ObjectId(id) }, {
-    $set: {
-      title,
-      description,
-    },
-  });
+  response.status = 200
+  response.body = newUser
+}
 
-  response.status = 200;
-  response.body = await Post.find({}, {
-    noCursorTimeout: false,
-  }).toArray()
-};
+const updatePost = async (ctx: RouterContext<"/api/posts/:id">) => {
+  const { request, response, params } = ctx
+  const { value } = request.body()
+  const { title, description } = await value
 
-const deletePost = async ({response, params}: RouterContext<'/api/posts/:id'>) => {
+  if (!request.hasBody) {
+    response.status = 404
+    response.body = {
+      msg: "No hay contenido :(",
+    }
+    return
+  }
 
   const { id } = params
 
-  await Post.deleteOne({ _id: new Bson.ObjectId(id) });
+  await postsCollection.updateOne(
+    { _id: new Bson.ObjectId(id) },
+    {
+      $set: {
+        title,
+        description,
+      },
+    }
+  )
 
-  response.status = 200;
-  response.body = await Post.find({}, {
-    noCursorTimeout: false,
-  }).toArray()
+  response.status = 200
+  response.body = await postsCollection.find().toArray()
 }
 
-export { createPost, getPost, getPosts, updatePost, deletePost };
+const deletePost = async (ctx: RouterContext<"/api/posts/:id">) => {
+  const { id } = ctx.params
+
+  await postsCollection.deleteOne({ _id: new Bson.ObjectId(id) })
+
+  ctx.response.status = 200
+  ctx.response.body = await postsCollection.find().toArray()
+}
+
+export { createPost, getPost, getPosts, updatePost, deletePost }

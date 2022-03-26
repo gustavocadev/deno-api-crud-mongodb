@@ -1,12 +1,14 @@
-import { db } from '../utils/dbConnect.ts';
+import { client } from "../utils/dbConnect.ts"
 import { Bson } from "../../deps.ts"
 
-interface PostSchema {
-    _id: Bson.ObjectId
-    title: string
-    description: string
+type PostSchema = {
+  _id: Bson.ObjectId
+  title: string
+  description: string
 }
 
-const Post = db.collection<PostSchema>("posts")
+const db = client.database("dataUsersDBTest")
 
-export default Post
+const postsCollection = db.collection<PostSchema>("posts")
+
+export { postsCollection }

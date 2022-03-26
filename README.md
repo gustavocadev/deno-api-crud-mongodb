@@ -1,4 +1,4 @@
 # deno-api-crud-mongodb
-Deno + MongoDB + Oak 
+This is an example of Deno + MongoDB Driver + Oak 
 
-A simple Crud using Deno + MongoDB 
+A simple Crud using Deno + MongoDB Driver and Oak. 🦕

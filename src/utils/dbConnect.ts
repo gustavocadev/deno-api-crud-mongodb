@@ -1,12 +1,13 @@
-import { MongoClient, config } from "../../deps.ts";
+import { MongoClient, config } from "../../deps.ts"
 
+const { MONGODB_URI } = config()
 
-const client = new MongoClient();
+const client = new MongoClient()
 
-await client.connect(config().MONGODB_URI);
+// console.log(MONGODB_URI ?? Deno.env.get("MONGODB_URI"))
 
-console.log("connectado 🚀:D🌍👦");
-  
-const db = client.database("dataUsersDBTest");
+await client.connect(MONGODB_URI ?? Deno.env.get("MONGODB_URI"))
 
-export { db };
+console.log("Connecting! 🚀🌍")
+
+export { client }
